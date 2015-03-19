@@ -15,7 +15,6 @@
     <string name="help_feedback">Help &amp; Feedback</string>
 
     <string name="clear">""</string>
-
     <string name="header_not_created">Header was not created</string>
     <string name="custom_header_not_created">Custom header was not created</string>
     <string name="start_navigation_listener">You must start the NavigationListener in onInit() method of its main activity. Example: this.setNavigationListener(this);</string>
