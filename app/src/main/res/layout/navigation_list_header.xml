@@ -23,11 +23,11 @@
     tools:ignore="MissingPrefix">
 
     <ImageView
-
         android:id="@+id/userBackground"
         android:layout_width="match_parent"
         android:layout_height="@dimen/userBackground_layout_height"
         android:contentDescription="@string/clear"
+        android:paddingTop="12dp"
         android:scaleType="fitXY" />
 
     <com.shwavan.mooccatalog.ui.RoundedImageView
