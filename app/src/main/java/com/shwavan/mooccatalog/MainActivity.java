@@ -33,44 +33,50 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity implements NavigationListener {
 
+    public static final String CURRENT_POSITION = "CURRENT_POSITION";
     public TextView mUserName;
     public TextView mUserEmail;
     public ImageView mUserPhoto;
     public ImageView mUserBackground;
-
     private ListView mList;
     private Toolbar mToolbar;
-
     private View mHeader;
-
     private TextView mTitleFooter;
     private ImageView mIconFooter;
-
     private int mColorName = 0;
     private int mColorIcon = 0;
     private int mColorSeparator = 0;
-
     private int mColorDefault = 0;
     private int mColorSelected = 0;
     private int mCurrentPosition = 0;
     private int mNewSelector = 0;
     private boolean mRemoveAlpha = false;
     private boolean mRemoveSelector = false;
-
     private List<Integer> mListIcon;
     private List<Integer> mListHeader;
     private List<String> mListNameItem;
     private SparseIntArray mSparseCounter;
-
     private DrawerLayout mDrawerLayout;
     private FrameLayout mRelativeDrawer;
     private RelativeLayout mFooterDrawer;
-
     private NavigationAdapter mNavigationAdapter;
     private ActionBarDrawerToggleCompat mDrawerToggle;
     private NavigationListener mNavigationListener;
-
-    public static final String CURRENT_POSITION = "CURRENT_POSITION";
+    private OnClickListener onClickUserPhoto = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            mNavigationListener.onClickUserPhotoNavigation(v);
+            mDrawerLayout.closeDrawer(mRelativeDrawer);
+        }
+    };
+    private OnClickListener onClickFooterDrawer = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mNavigationListener.onClickFooterItemNavigation(v);
+            mDrawerLayout.closeDrawer(mRelativeDrawer);
+        }
+    };
 
     /**
      * User information
@@ -218,10 +224,8 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
     @Override
     public void onItemClickNavigation(int position, int layoutContainerId) {
         FragmentManager mFragmentManager = getSupportFragmentManager();
-        UdacityFragment mFragment = new UdacityFragment();
-        if (mFragment != null) {
-            mFragmentManager.beginTransaction().replace(layoutContainerId, mFragment).commit();
-        }
+        UdacityRegFragment mFragment = new UdacityRegFragment(position);
+        mFragmentManager.beginTransaction().replace(layoutContainerId, mFragment).commit();
 
     }
 
@@ -240,27 +244,6 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
 
     }
 
-    private class ActionBarDrawerToggleCompat extends ActionBarDrawerToggle {
-
-        public ActionBarDrawerToggleCompat(Activity activity, DrawerLayout drawerLayout, Toolbar toolbar){
-            super(
-                    activity,
-                    drawerLayout, toolbar,
-                    R.string.drawer_open,
-                    R.string.drawer_close);
-        }
-
-        @Override
-        public void onDrawerClosed(View view) {
-            supportInvalidateOptionsMenu();
-        }
-
-        @Override
-        public void onDrawerOpened(View drawerView) {
-            supportInvalidateOptionsMenu();
-        }
-    }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         // TODO Auto-generated method stub
@@ -270,39 +253,6 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
             mDrawerToggle.onConfigurationChanged(newConfig);
         }
     }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            int mPosition = (position - 1);
-
-            if (position != 0) {
-                mNavigationListener.onItemClickNavigation(mPosition, R.id.container);
-                setCurrentPosition(mPosition);
-                setCheckedItemNavigation(mPosition, true);
-            }
-
-            mDrawerLayout.closeDrawer(mRelativeDrawer);
-        }
-    }
-
-    private OnClickListener onClickUserPhoto = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // TODO Auto-generated method stub
-            mNavigationListener.onClickUserPhotoNavigation(v);
-            mDrawerLayout.closeDrawer(mRelativeDrawer);
-        }
-    };
-
-    private OnClickListener onClickFooterDrawer = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            mNavigationListener.onClickFooterItemNavigation(v);
-            mDrawerLayout.closeDrawer(mRelativeDrawer);
-        }
-    };
 
     private void mountListNavigation(Bundle savedInstanceState){
         createUserDefaultHeader();
@@ -348,12 +298,13 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
 
     /**
      * Set adapter attributes
-     * @param listNameItem list name item.
-     * @param listIcon list icon item.
-     * @param listItensHeader list header name item.
+     *
+     * @param listNameItem     list name item.
+     * @param listIcon         list icon item.
+     * @param listItensHeader  list header name item.
      * @param sparceItensCount sparce count item.
      */
-    public void setNavigationAdapter(List<String> listNameItem, List<Integer> listIcon, List<Integer> listItensHeader, SparseIntArray sparceItensCount){
+    public void setNavigationAdapter(List<String> listNameItem, List<Integer> listIcon, List<Integer> listItensHeader, SparseIntArray sparceItensCount) {
         this.mListNameItem = listNameItem;
         this.mListIcon = listIcon;
         this.mListHeader = listItensHeader;
@@ -365,7 +316,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param listNameItem list name item.
      * @param listIcon list icon item.
      */
-    public void setNavigationAdapter(List<String> listNameItem, List<Integer> listIcon){
+    public void setNavigationAdapter(List<String> listNameItem, List<Integer> listIcon) {
         this.mListNameItem = listNameItem;
         this.mListIcon = listIcon;
     }
@@ -374,17 +325,25 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * Starting listener navigation
      * @param navigationListener listener.
      */
-    public void setNavigationListener(NavigationListener navigationListener){
+    public void setNavigationListener(NavigationListener navigationListener) {
         this.mNavigationListener = navigationListener;
-    };
+    }
 
     /**
      * First item of the position selected from the list
      * @param position ...
      */
-    public void setDefaultStartPositionNavigation(int position){
+    public void setDefaultStartPositionNavigation(int position) {
         this.mCurrentPosition = position;
     }
+
+    /**
+     * get position in the last clicked item list
+     */
+    public int getCurrentPosition() {
+        return this.mCurrentPosition;
+    }
+
 
     /**
      * Position in the last clicked item list
@@ -395,20 +354,11 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
     }
 
     /**
-     * get position in the last clicked item list
-     */
-    public int getCurrentPosition(){
-        return this.mCurrentPosition;
-    }
-
-    /*{  }*/
-
-    /**
      * Select item clicked
      * @param position item position.
      * @param checked true to check.
      */
-    public void setCheckedItemNavigation(int position, boolean checked){
+    public void setCheckedItemNavigation(int position, boolean checked) {
         this.mNavigationAdapter.resetarCheck();
         this.mNavigationAdapter.setChecked(position, checked);
     }
@@ -418,24 +368,26 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param title item footer name.
      * @param icon item footer icon.
      */
-    public void setFooterInformationDrawer(String title, int icon){
+    public void setFooterInformationDrawer(String title, int icon) {
 
-        if (title == null){
+        if (title == null) {
             throw new RuntimeException(getString(R.string.title_null_or_empty));
         }
 
-        if (title.trim().equals("")){
+        if (title.trim().equals("")) {
             throw new RuntimeException(getString(R.string.title_null_or_empty));
         }
 
         mTitleFooter.setText(title);
 
-        if (icon == 0){
+        if (icon == 0) {
             mIconFooter.setVisibility(View.GONE);
-        }else{
+        } else {
             mIconFooter.setImageResource(icon);
         }
-    };
+    }
+
+    /*{  }*/
 
     /**
      * Information footer list item
@@ -444,39 +396,39 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param colorName item footer name color.
      * @param colorIcon item footer icon color.
      */
-    public void setFooterInformationDrawer(String title, int icon, int colorName, int colorIcon){
+    public void setFooterInformationDrawer(String title, int icon, int colorName, int colorIcon) {
 
-        if (title == null){
+        if (title == null) {
             throw new RuntimeException(getString(R.string.title_null_or_empty));
         }
 
-        if (title.trim().equals("")){
+        if (title.trim().equals("")) {
             throw new RuntimeException(getString(R.string.title_null_or_empty));
         }
 
         mTitleFooter.setText(title);
 
-        if (colorName > 0){
+        if (colorName > 0) {
             mTitleFooter.setTextColor(getResources().getColor(colorName));
         }
 
-        if (icon == 0){
+        if (icon == 0) {
             mIconFooter.setVisibility(View.GONE);
-        }else{
+        } else {
             mIconFooter.setImageResource(icon);
 
-            if ( colorIcon > 0) {
+            if (colorIcon > 0) {
                 mIconFooter.setColorFilter(getResources().getColor(colorIcon));
             }
         }
-    };
+    }
 
     /**
      * Information footer list item
      * @param title item footer name.
      * @param icon item footer icon.
      */
-    public void setFooterInformationDrawer(int title, int icon){
+    public void setFooterInformationDrawer(int title, int icon) {
 
         if (title == 0){
             throw new RuntimeException(getString(R.string.title_null_or_empty));
@@ -489,7 +441,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
         }else{
             mIconFooter.setImageResource(icon);
         }
-    };
+    }
 
     /**
      * Information footer list item
@@ -498,7 +450,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param colorName item footer name color.
      * @param colorIcon item footer icon color.
      */
-    public void setFooterInformationDrawer(int title, int icon, int colorName, int colorIcon){
+    public void setFooterInformationDrawer(int title, int icon, int colorName, int colorIcon) {
 
         if (title == 0){
             throw new RuntimeException(getString(R.string.title_null_or_empty));
@@ -519,29 +471,33 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
                 mIconFooter.setColorFilter(getResources().getColor(colorIcon));
             }
         }
-    };
+    }
+
+
 
     /**
      * If not want to use the footer item just put false
      * @param visible true or false.
      */
-    public void setFooterNavigationVisible(boolean visible){
+    public void setFooterNavigationVisible(boolean visible) {
         this.mFooterDrawer.setVisibility((visible) ? View.VISIBLE : View.GONE);
     }
+
 
     /**
      * Item color selected in the list - name and icon (use before the setNavigationAdapter)
      * @param colorId color id.
      */
-    public void setColorSelectedItemNavigation(int colorId){
+    public void setColorSelectedItemNavigation(int colorId) {
         this.mColorSelected = colorId;
     }
+
 
     /**
      * Footer icon color
      * @param colorId color id.
      */
-    public void setFooterIconColorNavigation(int colorId){
+    public void setFooterIconColorNavigation(int colorId) {
         this.mIconFooter.setColorFilter(getResources().getColor(colorId));
     }
 
@@ -549,7 +505,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * Item color default in the list - name and icon (use before the setNavigationAdapter)
      * @param colorId color id.
      */
-    public void setColorDefaultItemNavigation(int colorId){
+    public void setColorDefaultItemNavigation(int colorId) {
         this.mColorDefault = colorId;
     }
 
@@ -557,7 +513,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * Icon item color in the list - icon (use before the setNavigationAdapter)
      * @param colorId color id.
      */
-    public void setColorIconItemNavigation(int colorId){
+    public void setColorIconItemNavigation(int colorId) {
         this.mColorIcon = colorId;
     }
 
@@ -565,7 +521,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * Separator item subHeader color in the list - icon (use before the setNavigationAdapter)
      * @param colorId color id.
      */
-    public void setColorSeparatorItemSubHeaderNavigation(int colorId){
+    public void setColorSeparatorItemSubHeaderNavigation(int colorId) {
         this.mColorSeparator = colorId;
     }
 
@@ -573,7 +529,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * Name item color in the list - name (use before the setNavigationAdapter)
      * @param colorId color id.
      */
-    public void setColorNameItemNavigation(int colorId){
+    public void setColorNameItemNavigation(int colorId) {
         this.mColorName = colorId;
     }
 
@@ -581,9 +537,9 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * New selector navigation
      * @param resourceSelector drawable xml - selector.
      */
-    public void setNewSelectorNavigation(int resourceSelector){
+    public void setNewSelectorNavigation(int resourceSelector) {
 
-        if (mRemoveSelector){
+        if (mRemoveSelector) {
             throw new RuntimeException(getString(R.string.remove_selector_navigation));
         }
 
@@ -593,7 +549,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
     /**
      * Remove selector navigation
      */
-    public void removeSelectorNavigation(){
+    public void removeSelectorNavigation() {
         this.mRemoveSelector = true;
     }
 
@@ -602,7 +558,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param position item position.
      * @param name new name
      */
-    public void setNewName(int position, String name){
+    public void setNewName(int position, String name) {
         this.mNavigationAdapter.setNewName(position, name);
     }
 
@@ -611,7 +567,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param position item position.
      * @param name new name
      */
-    public void setNewName(int position, int name){
+    public void setNewName(int position, int name) {
         this.mNavigationAdapter.setNewName(position, getString(name));
     }
 
@@ -620,7 +576,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param position item position.
      * @param icon new icon
      */
-    public void setNewIcon(int position, int icon){
+    public void setNewIcon(int position, int icon) {
         this.mNavigationAdapter.setNewIcon(position, icon);
     }
 
@@ -631,7 +587,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param icon new icon
      * @param counter new counter
      */
-    public void setNewInformationItem(int position, int name, int icon, int counter){
+    public void setNewInformationItem(int position, int name, int icon, int counter) {
         this.mNavigationAdapter.setNewInformationItem(position, getString(name), icon, counter);
     }
 
@@ -643,7 +599,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param counter new counter
      */
 
-    public void setNewInformationItem(int position, String name, int icon, int counter){
+    public void setNewInformationItem(int position, String name, int icon, int counter) {
         this.mNavigationAdapter.setNewInformationItem(position, name, icon, counter);
     }
 
@@ -652,7 +608,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param position item position.
      * @param value new counter value.
      */
-    public void setNewCounterValue(int position, int value){
+    public void setNewCounterValue(int position, int value) {
         this.mNavigationAdapter.setNewCounterValue(position, value);
     }
 
@@ -661,7 +617,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param position item position.
      * @param value new counter value (old value + new value).
      */
-    public void setIncreasingCounterValue(int position, int value){
+    public void setIncreasingCounterValue(int position, int value) {
         this.mNavigationAdapter.setIncreasingCounterValue(position, value);
     }
 
@@ -670,14 +626,14 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param position item position.
      * @param value new counter value (old value - new value).
      */
-    public void setDecreaseCountervalue(int position, int value){
+    public void setDecreaseCountervalue(int position, int value) {
         this.mNavigationAdapter.setDecreaseCountervalue(position, value);
     }
 
     /**
      * Remove alpha item navigation (use before the setNavigationAdapter)
      */
-    public void removeAlphaItemNavigation(){
+    public void removeAlphaItemNavigation() {
         this.mRemoveAlpha = !mRemoveAlpha;
     }
 
@@ -687,8 +643,8 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * Default value is 15
      * @param elevation Sets the base elevation of this view, in pixels.
      */
-    public void setElevationToolBar(float elevation){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    public void setElevationToolBar(float elevation) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.getToolbar().setElevation(elevation);
         }
     }
@@ -697,7 +653,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * Remove default Header
      */
     public void showDefaultHeader() {
-        if (mHeader == null){
+        if (mHeader == null) {
             throw new RuntimeException(getString(R.string.header_not_created));
         }
 
@@ -708,7 +664,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * Remove default Header
      */
     private void removeDefaultHeader() {
-        if (mHeader == null){
+        if (mHeader == null) {
             throw new RuntimeException(getString(R.string.header_not_created));
         }
 
@@ -720,7 +676,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param v ...
      */
     public void addCustomHeader(View v) {
-        if (v == null){
+        if (v == null) {
             throw new RuntimeException(getString(R.string.custom_header_not_created));
         }
 
@@ -733,7 +689,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
      * @param v ...
      */
     public void removeCustomdHeader(View v) {
-        if (v == null){
+        if (v == null) {
             throw new RuntimeException(getString(R.string.custom_header_not_created));
         }
 
@@ -776,6 +732,43 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
             mDrawerLayout.closeDrawer(mRelativeDrawer);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private class ActionBarDrawerToggleCompat extends ActionBarDrawerToggle {
+
+        public ActionBarDrawerToggleCompat(Activity activity, DrawerLayout drawerLayout, Toolbar toolbar) {
+            super(
+                    activity,
+                    drawerLayout, toolbar,
+                    R.string.drawer_open,
+                    R.string.drawer_close);
+        }
+
+        @Override
+        public void onDrawerClosed(View view) {
+            supportInvalidateOptionsMenu();
+        }
+
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            supportInvalidateOptionsMenu();
+        }
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            int mPosition = (position - 1);
+
+            if (position != 0) {
+                mNavigationListener.onItemClickNavigation(mPosition, R.id.container);
+                setCurrentPosition(mPosition);
+                setCheckedItemNavigation(mPosition, true);
+            }
+
+            mDrawerLayout.closeDrawer(mRelativeDrawer);
         }
     }
 

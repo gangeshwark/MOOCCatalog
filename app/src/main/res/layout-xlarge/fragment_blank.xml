@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
-    tools:context="com.shwavan.mooccatalog.UdacityFragment">
+    tools:context="com.shwavan.mooccatalog.UdacityRegFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.RecyclerView

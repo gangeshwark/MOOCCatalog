@@ -2,14 +2,12 @@ package com.shwavan.mooccatalog;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,24 +23,25 @@ import com.shwavan.mooccatalog.models.UdacityCourse;
 import com.shwavan.mooccatalog.receivers.DownloadResultReceiver;
 import com.shwavan.mooccatalog.services.FetchCourseListService;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 
 
-public class UdacityFragment extends Fragment implements DownloadResultReceiver.Receiver {
+public class UdacityRegFragment extends Fragment implements DownloadResultReceiver.Receiver {
 
     RecyclerView recyclerView;
     ProgressDialog progressDialog;
+    int mode;
+    UdacityCourseAdapter adapter;
     private DownloadResultReceiver mReceiver;
     private LinearLayoutManager layoutManager;
 
-    public UdacityFragment() {
+    public UdacityRegFragment() {
         // Required empty public constructor
+    }
+
+    public UdacityRegFragment(int mode) {
+        // Required empty public constructor
+        this.mode = mode;
     }
 
     @Override
@@ -53,7 +52,15 @@ public class UdacityFragment extends Fragment implements DownloadResultReceiver.
 
         //listView = (ListView) rootView.findViewById(R.id.listView);
         DBHelper helper = new DBHelper(getActivity());
-        List<UdacityCourse> list = helper.getUdacityCourseList();
+        List<UdacityCourse> list;
+        if (mode == 1) {
+            list = helper.getUdacityCourseList();
+        } else if (mode == 2) {
+            list = helper.getUdacityCourseList();
+        } else {
+            list = helper.getUdacityCourseList();
+        }
+
         UdacityCourseAdapter adapter = new UdacityCourseAdapter(list);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
@@ -115,7 +122,7 @@ public class UdacityFragment extends Fragment implements DownloadResultReceiver.
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
     }
-    UdacityCourseAdapter adapter;
+
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData) {
         switch (resultCode) {
@@ -135,7 +142,14 @@ public class UdacityFragment extends Fragment implements DownloadResultReceiver.
                         android.R.id.text1,
                         results);
                 DBHelper helper = new DBHelper(getActivity());
-                List<UdacityCourse> list = helper.getUdacityCourseList();
+                List<UdacityCourse> list;
+                if (mode == 1) {
+                    list = helper.getUdacityCourseList();
+                } else if (mode == 2) {
+                    list = helper.getUdacityCourseList();
+                } else {
+                    list = helper.getUdacityCourseList();
+                }
 
                 adapter = new UdacityCourseAdapter(list);
                 recyclerView.setAdapter(adapter);
@@ -148,73 +162,5 @@ public class UdacityFragment extends Fragment implements DownloadResultReceiver.
                 break;
         }
     }
-
-    public class FetchCourseList extends AsyncTask<Void, Void, Void> {
-
-        InputStream inputStream = null;
-        String result = "";
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            // Creating service handler class instance
-            ServiceHandler sh = new ServiceHandler();
-
-            // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(Constants.Udacity.BASE_URL, ServiceHandler.GET);
-
-            Log.d("Response: ", "--> " + jsonStr);
-            if (jsonStr != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
-
-                    // Getting JSON Array node
-                    JSONArray courses = jsonObj.getJSONArray(Constants.Udacity.COURSES_FIELD);
-
-                    // looping through All Contacts
-                    for (int i = 0; i < courses.length(); i++) {
-                        JSONObject c = courses.getJSONObject(i);
-                        JSONArray in = c.getJSONArray(Constants.Udacity.INSTRUCTORS);
-                        //JSONObject instr = c.getJSONObject(Constants.Udacity.INSTRUCTORS);
-                        Log.e("INSTRUCTOR",in.toString());
-                        String key = c.getString(Constants.Udacity.UDA_PARAM_COURSE_KEY);
-                        String title = c.getString(Constants.Udacity.UDA_PARAM_TITLE);
-                        String url = c.getString(Constants.Udacity.UDA_PARAM_LINK);
-
-                        Log.e("COURSE",key+" "+title+" "+url+" ");
-
-                        // tmp hashmap for single contact
-                        HashMap<String, String> coursesList = new HashMap<String, String>();
-
-                        // adding each child node to HashMap key => value
-                        //contact.put(TAG_ID, id);
-                        //contact.put(TAG_NAME, name);
-                        //contact.put(TAG_EMAIL, email);
-                        //contact.put(TAG_PHONE_MOBILE, mobile);
-
-                        // adding contact to contact list
-                        //contactList.add(contact);
-                    }
-                } catch (IllegalStateException e3) {
-                    Log.e("IllegalStateException", e3.toString());
-                    e3.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
-    }
-
 
 }

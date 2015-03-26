@@ -1,5 +1,6 @@
 package com.shwavan.mooccatalog;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,7 @@ public class UdacityCourseDetailsActivity extends ActionBarActivity {
                     .add(R.id.detailsContainer, new UdacityCourseDetailsFragment())
                     .commit();
         }
+        this.setElevationToolBar(15);
     }
     /**
      * get toolbar
@@ -32,10 +34,16 @@ public class UdacityCourseDetailsActivity extends ActionBarActivity {
         return this.mToolbar;
     }
 
+    public void setElevationToolBar(float elevation) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.getToolbar().setElevation(elevation);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_udacity_course_details, menu);
+        //getMenuInflater().inflate(R.menu.menu_udacity_course_details, menu);
         return true;
     }
 

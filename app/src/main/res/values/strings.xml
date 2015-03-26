@@ -23,7 +23,7 @@
     <string name="list_null_or_empty">List of null or empty names. Solution: mListNameItem = new ArrayList &#60;&#62; (); mListNameItem.add (position, R.string.name);</string>
     <string name="value_icon_should_be_0">The value of the icon for a subHeader item should be 0</string>
     <string name="enter_item_name_position">Enter the item name position </string>
-    <string name="title_activity_udacity_course_details">Udacity Course Details</string>
+    <string name="title_activity_udacity_course_details">Course Details</string>
     <string name="sign_in">Sign in using Google</string>
 
 </resources>
