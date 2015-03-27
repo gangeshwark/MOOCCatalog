@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.shwavan.mooccatalog.adapter.UdacityCourseAdapter;
@@ -137,10 +136,6 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
                 String[] results = resultData.getStringArray("result");
 
                 /* Update ListView with result */
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
-                        android.R.layout.simple_list_item_2,
-                        android.R.id.text1,
-                        results);
                 DBHelper helper = new DBHelper(getActivity());
                 List<UdacityCourse> list;
                 if (mode == 1) {
@@ -150,7 +145,6 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
                 } else {
                     list = helper.getUdacityCourseList();
                 }
-
                 adapter = new UdacityCourseAdapter(list);
                 recyclerView.setAdapter(adapter);
                 break;

@@ -21,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Mooccatalog.db";
     // Lists table name
     public static final String TABLE_UDACITY = "udacity";
-    public static final String TABLE_COURSERA = "coursera";
+    public static final String TABLE_UDACITY_NANO = "udacity";
 
     // Udacity Course Columns names
 
@@ -62,6 +62,25 @@ public class DBHelper extends SQLiteOpenHelper {
             + KEY_UPDATED_ON + " TEXT, "
             + " UNIQUE (" + KEY_CID + ") ON CONFLICT REPLACE"
             + ");";
+    private static final String CREATE_UDACITY_NANOD_TABLE = "CREATE TABLE " + TABLE_UDACITY_NANO + "("
+            + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + KEY_CID + " TEXT, "
+            + KEY_TITLE + " TEXT,"
+            + KEY_SUBTITLE + " TEXT, "
+            + KEY_SHORT_SUM + " TEXT, "
+            + KEY_SUM + " TEXT, "
+            + KEY_IMAGE + " TEXT, "
+            + KEY_VIDEO + " TEXT, "
+            + KEY_HOMEPAGE + " TEXT, "
+            + KEY_NEW + " TEXT, "
+            + KEY_LEVEL + " TEXT, "
+            + KEY_FEATURED + " TEXT, "
+            + KEY_REQ + " TEXT, "
+            + KEY_NOINSTRUCTORS + " INTEGER, "
+            + KEY_PROJECT_NAME + " TEXT, "
+            + KEY_UPDATED_ON + " TEXT, "
+            + " UNIQUE (" + KEY_CID + ") ON CONFLICT REPLACE"
+            + ");";
 
 
     // Database Version
@@ -75,8 +94,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_UDACITY_TABLE);
-
-
+        db.execSQL(CREATE_UDACITY_NANOD_TABLE);
     }
 
     @Override
@@ -86,6 +104,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void clearDB() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_UDACITY, null, null);
+        db.delete(TABLE_UDACITY_NANO, null, null);
         db.close();
     }
 
@@ -120,12 +139,76 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return id;
     }
+
+    public String addUdacityDCourse(UdacityCourse course) {
+        String id = "-1";
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_CID, course.getKey());
+        values.put(KEY_TITLE, course.getTitle());
+        values.put(KEY_SUBTITLE, course.getSubtitle());
+        values.put(KEY_SHORT_SUM, course.getShort_sum());
+        values.put(KEY_SUM, course.getSummary());
+        values.put(KEY_IMAGE, course.getImage_url());
+        values.put(KEY_VIDEO, course.getVideo_url());
+        values.put(KEY_HOMEPAGE, course.getHome_url());
+        values.put(KEY_NEW, course.getNew_course());
+        values.put(KEY_LEVEL, course.getLevel());
+        values.put(KEY_FEATURED, course.isFeatured());
+        values.put(KEY_REQ, course.getReq());
+        values.put(KEY_NOINSTRUCTORS, course.getNo_of_instructors());
+        values.put(KEY_PROJECT_NAME, course.getProject_name());
+        values.put(KEY_UPDATED_ON, Calendar.getInstance().toString());
+        try {
+            db.insert(TABLE_UDACITY_NANO, null, values);
+            id = course.getKey();
+        } catch (SQLException e) {
+            Log.e("Error writing new list ", e.toString());
+        } finally {
+            db.close();
+        }
+        return id;
+    }
     public ArrayList<UdacityCourse> getUdacityCourseList(){
         ArrayList<UdacityCourse> udacityCourses = new ArrayList<UdacityCourse>();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(TABLE_UDACITY,null,null,null,null,null,null);
         if(cursor!=null){
             if(cursor.moveToFirst()){
+                do {
+                    UdacityCourse course = new UdacityCourse();
+                    course.setId(cursor.getLong(0));
+                    course.setKey(cursor.getString(1));
+                    course.setTitle(cursor.getString(2));
+                    course.setSubtitle(cursor.getString(3));
+                    course.setShort_sum(cursor.getString(4));
+                    course.setSummary(cursor.getString(5));
+                    course.setImage_url(cursor.getString(6));
+                    course.setVideo_url(cursor.getString(7));
+                    course.setHome_url(cursor.getString(8));
+                    course.setNew_course(Boolean.valueOf(cursor.getString(9)));
+                    course.setLevel(cursor.getString(10));
+                    course.setFeatured(Boolean.valueOf(cursor.getString(11)));
+                    course.setReq(cursor.getString(12));
+                    course.setNo_of_instructors(cursor.getString(13));
+                    course.setProject_name(cursor.getString(14));
+                    course.setUpdated_on(cursor.getString(15));
+                    udacityCourses.add(course);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+
+        db.close();
+        return udacityCourses;
+    }
+
+    public ArrayList<UdacityCourse> getUdacityDCourseList() {
+        ArrayList<UdacityCourse> udacityCourses = new ArrayList<UdacityCourse>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_UDACITY_NANO, null, null, null, null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
                 do {
                     UdacityCourse course = new UdacityCourse();
                     course.setId(cursor.getLong(0));

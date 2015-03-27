@@ -135,15 +135,16 @@ public class FetchCourseListService extends IntentService {
 
     private String[] parseResult(String result) {
 
-        String[] blogTitles = null;
+        String[] courseTitles = null, degTitles = null;
+        String[] titles = null;
         try {
             JSONObject jsonObj = new JSONObject(result);
 
             // Getting JSON Array node
             JSONArray courses = jsonObj.getJSONArray(Constants.Udacity.COURSES_FIELD);
-            blogTitles = new String[courses.length()];
+            courseTitles = new String[courses.length()];
             Toast.makeText(getApplication(),"No of courses"+courses.length(),Toast.LENGTH_SHORT).show();
-            // looping through All Contacts
+            // looping through All Courses
             for (int i = 0; i < courses.length(); i++) {
                 JSONObject c = courses.getJSONObject(i);
                 //JSONArray in = c.getJSONArray(Constants.Udacity.INSTRUCTORS);
@@ -165,7 +166,7 @@ public class FetchCourseListService extends IntentService {
                 String newstat = c.getString(Constants.Udacity.UDA_PARAM_NEW);
                 String url = c.getString(Constants.Udacity.UDA_PARAM_LINK);
 
-                blogTitles[i]= title;
+                courseTitles[i] = title;
                 UdacityCourse course = new UdacityCourse();
                 course.setKey(key.trim());
                 course.setFeatured(Boolean.getBoolean(featured.trim()));
@@ -183,12 +184,59 @@ public class FetchCourseListService extends IntentService {
                 DBHelper dbHelper = new DBHelper(getApplicationContext());
                 dbHelper.addUdacityCourse(course);
                 Log.e("COURSE",key+" "+title+" "+url+" " + video);
+            }
+            JSONArray nanoDegs = jsonObj.getJSONArray(Constants.Udacity.COURSES_FIELD);
+            degTitles = new String[nanoDegs.length()];
+            for (int i = 0; i < nanoDegs.length(); i++) {
+                JSONObject c = nanoDegs.getJSONObject(i);
+                //JSONArray in = c.getJSONArray(Constants.Udacity.INSTRUCTORS);
+                //JSONObject instr = c.getJSONObject(Constants.Udacity.INSTRUCTORS);
+                //Log.e("INSTRUCTOR",in.toString());
+                String key = c.getString(Constants.Udacity.UDA_PARAM_COURSE_KEY);
+                String title = c.getString(Constants.Udacity.UDA_PARAM_TITLE);
+                String subtitle = c.getString(Constants.Udacity.UDA_PARAM_SUBTITLE);
+                String image = c.getString(Constants.Udacity.UDA_PARAM_IMAGE);
+                String projname = c.getString(Constants.Udacity.UDA_PARAM_PROJECTNAME);
+                String level = c.getString(Constants.Udacity.UDA_PARAM_LEVEL);
+                String shortsum = c.getString(Constants.Udacity.UDA_PARAM_SHORTSUM);
+                String summary = c.getString(Constants.Udacity.UDA_PARAM_SUMMARY);
+                JSONObject vlink = c.getJSONObject(Constants.Udacity.UDA_PARAM_TEASER_VID);
+
+                String video = vlink.getString(Constants.Udacity.UDA_PARAM_VIDEO);
+                String featured = c.getString(Constants.Udacity.UDA_PARAM_FEATURED);
+                String req = c.getString(Constants.Udacity.UDA_PARAM_REQ);
+                String newstat = c.getString(Constants.Udacity.UDA_PARAM_NEW);
+                String url = c.getString(Constants.Udacity.UDA_PARAM_LINK);
+
+                degTitles[i] = title;
+                UdacityCourse course = new UdacityCourse();
+                course.setKey(key.trim());
+                course.setFeatured(Boolean.getBoolean(featured.trim()));
+                course.setTitle(title.trim());
+                course.setSubtitle(subtitle.trim());
+                course.setImage_url(image);
+                course.setHome_url(url);
+                course.setProject_name(projname.trim());
+                course.setLevel(level.trim());
+                course.setShort_sum(shortsum.trim());
+                course.setReq(req.trim());
+                course.setNew_course(Boolean.getBoolean(newstat));
+                course.setVideo_url(video);
+                course.setSummary(summary.trim());
+                DBHelper dbHelper = new DBHelper(getApplicationContext());
+                dbHelper.addUdacityDCourse(course);
+                Log.e("COURSE", key + " " + title + " " + url + " " + video);
 
             }
+
+            titles = new String[degTitles.length + courseTitles.length];
+            System.arraycopy(courseTitles, 0, titles, 0, courseTitles.length);
+            System.arraycopy(degTitles, courseTitles.length + 1, titles, 0, degTitles.length);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return blogTitles;
+
+        return titles;
     }
 
     public class DownloadException extends Exception {

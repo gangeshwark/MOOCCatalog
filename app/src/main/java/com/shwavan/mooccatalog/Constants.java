@@ -31,8 +31,8 @@ public class Constants {
         public static final String UDA_PARAM_NEW = "new_release";
         public static final String UDA_PARAM_TEASER_VID = "teaser_video";
 
-    }
-    public class Coursera{
+        //nanodegree courses
+        public static final String ND_FIELD = "degrees";
 
     }
 }
