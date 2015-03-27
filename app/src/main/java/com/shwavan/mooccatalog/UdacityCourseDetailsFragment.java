@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -30,6 +31,7 @@ public class UdacityCourseDetailsFragment extends Fragment {
     TextView courseid, desc, courseSub, coursetit, reqknow, projectname;
     Button link;
     ImageView imageView;
+    LinearLayout linearLayout;
     private ImageLoadingListener animateFirstListener;
 
     public UdacityCourseDetailsFragment() {
@@ -40,6 +42,7 @@ public class UdacityCourseDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_udacity_course_details, container, false);
         animateFirstListener = new SimpleImageLoadingListener();
+        linearLayout = (LinearLayout) rootView.findViewById(R.id.prolay);
         Intent i = getActivity().getIntent();
         id = i.getStringExtra("id");
         coursetit = (TextView) rootView.findViewById(R.id.course_title);
@@ -75,16 +78,23 @@ public class UdacityCourseDetailsFragment extends Fragment {
         };
         Uri uri = Uri.parse(UdaCourseContentProvider.CONTENT_URI + "/" + id);
 
-        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null,
-                null);
+        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
         if(cursor!=null){
             cursor.moveToFirst();
             if (getActivity().getActionBar() != null)
                 getActivity().setTitle(cursor.getString(2));
-            courseid.setText("Course Key : " + cursor.getString(1));
+            if (cursor.getString(1).startsWith("nd")) {
+                courseid.setText("Course Key : " + cursor.getString(1) + " - Nanodegree");
+            } else {
+                courseid.setText("Course Key : " + cursor.getString(1));
+            }
+
             coursetit.setText(cursor.getString(2));
             courseSub.setText(cursor.getString(3));
-            projectname.setText(projectname.getText() + " : " + cursor.getString(14));
+            if (!cursor.getString(14).equals(""))
+                projectname.setText(projectname.getText() + " : " + cursor.getString(14));
+            else
+                linearLayout.setVisibility(View.GONE);
             desc.setText(android.text.Html.fromHtml(cursor.getString(5)));
             reqknow.setText(android.text.Html.fromHtml(cursor.getString(12)));
             //ImageLoader imageLoader = ImageLoader.getInstance();

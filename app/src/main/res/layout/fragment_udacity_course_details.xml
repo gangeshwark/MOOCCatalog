@@ -2,12 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_material_dark"
+    android:background="@color/button_material_dark"
     tools:context="com.shwavan.mooccatalog.UdacityCourseDetailsActivity$PlaceholderFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
@@ -21,6 +22,7 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp" />
 
             <LinearLayout
@@ -34,8 +36,9 @@
                     android:layout_height="wrap_content"
                     android:autoLink="all"
                     android:text="Course Title"
-                    android:textAppearance="@android:color/holo_orange_dark"
-                    android:textSize="18sp" />
+                    android:textColor="@android:color/holo_orange_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/course_subt"
@@ -60,6 +63,7 @@
                     android:gravity="center_vertical|center_horizontal"
                     android:singleLine="true"
                     android:text="Visit Course"
+                    android:textColor="@android:color/holo_orange_dark"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:typeface="normal" />
@@ -84,7 +88,9 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:text="Course Summary"
-                android:textSize="16sp" />
+                android:textColor="@android:color/holo_orange_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/desc"
@@ -117,7 +123,9 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:text="Required Knowledge"
-                android:textSize="16sp" />
+                android:textColor="@android:color/holo_orange_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/knowledge"
@@ -150,7 +158,9 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:text="Project Details:"
-                android:textSize="16sp" />
+                android:textColor="@android:color/holo_orange_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/projectname"

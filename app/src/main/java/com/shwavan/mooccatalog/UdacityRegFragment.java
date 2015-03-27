@@ -53,9 +53,9 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
         DBHelper helper = new DBHelper(getActivity());
         List<UdacityCourse> list;
         if (mode == 1) {
-            list = helper.getUdacityCourseList();
+            list = helper.getUdacityRCourseList();
         } else if (mode == 2) {
-            list = helper.getUdacityCourseList();
+            list = helper.getUdacityDCourseList();
         } else {
             list = helper.getUdacityCourseList();
         }

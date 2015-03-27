@@ -224,14 +224,14 @@ public class FetchCourseListService extends IntentService {
                 course.setVideo_url(video);
                 course.setSummary(summary.trim());
                 DBHelper dbHelper = new DBHelper(getApplicationContext());
-                dbHelper.addUdacityDCourse(course);
+                dbHelper.addUdacityCourse(course);
                 Log.e("COURSE", key + " " + title + " " + url + " " + video);
 
             }
 
-            titles = new String[degTitles.length + courseTitles.length];
+            titles = new String[(degTitles.length + courseTitles.length + 1)];
             System.arraycopy(courseTitles, 0, titles, 0, courseTitles.length);
-            System.arraycopy(degTitles, courseTitles.length + 1, titles, 0, degTitles.length);
+            System.arraycopy(degTitles, 0, titles, courseTitles.length + 1, degTitles.length);
         } catch (JSONException e) {
             e.printStackTrace();
         }
