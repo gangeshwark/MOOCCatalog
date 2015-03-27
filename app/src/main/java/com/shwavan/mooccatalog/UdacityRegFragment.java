@@ -62,7 +62,6 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
             list = helper.getUdacityCourseList();
 
         }
-
         UdacityCourseAdapter adapter = new UdacityCourseAdapter(list);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
