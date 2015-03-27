@@ -54,10 +54,13 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
         List<UdacityCourse> list;
         if (mode == 1) {
             list = helper.getUdacityRCourseList();
+
         } else if (mode == 2) {
             list = helper.getUdacityDCourseList();
+
         } else {
             list = helper.getUdacityCourseList();
+
         }
 
         UdacityCourseAdapter adapter = new UdacityCourseAdapter(list);
@@ -77,14 +80,14 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.activity_main,menu);
+        inflater.inflate(R.menu.activity_main, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
-            case R.id.action_settings :
+        switch (item.getItemId()) {
+            case R.id.action_settings:
                 break;
             case R.id.load:
                 startSer();
@@ -99,7 +102,7 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
 
     }
 
-    void startSer(){
+    void startSer() {
         /* Starting Download Service */
         mReceiver = new DownloadResultReceiver(new Handler());
         mReceiver.setReceiver(this);
@@ -139,11 +142,14 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
                 DBHelper helper = new DBHelper(getActivity());
                 List<UdacityCourse> list;
                 if (mode == 1) {
-                    list = helper.getUdacityCourseList();
+                    list = helper.getUdacityRCourseList();
+
                 } else if (mode == 2) {
-                    list = helper.getUdacityCourseList();
+                    list = helper.getUdacityDCourseList();
+
                 } else {
                     list = helper.getUdacityCourseList();
+
                 }
                 adapter = new UdacityCourseAdapter(list);
                 recyclerView.setAdapter(adapter);

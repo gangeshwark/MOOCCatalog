@@ -185,7 +185,7 @@ public class FetchCourseListService extends IntentService {
                 dbHelper.addUdacityCourse(course);
                 Log.e("COURSE",key+" "+title+" "+url+" " + video);
             }
-            JSONArray nanoDegs = jsonObj.getJSONArray(Constants.Udacity.COURSES_FIELD);
+            JSONArray nanoDegs = jsonObj.getJSONArray(Constants.Udacity.ND_FIELD);
             degTitles = new String[nanoDegs.length()];
             for (int i = 0; i < nanoDegs.length(); i++) {
                 JSONObject c = nanoDegs.getJSONObject(i);

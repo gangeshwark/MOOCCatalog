@@ -180,7 +180,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     course.setNo_of_instructors(cursor.getString(13));
                     course.setProject_name(cursor.getString(14));
                     course.setUpdated_on(cursor.getString(15));
-                    if (cursor.getString(1).trim().startsWith("nd")) {
+                    if (!cursor.getString(1).trim().startsWith("nd")) {
                         udacityCourses.add(course);
                     }
                 } while (cursor.moveToNext());
@@ -218,7 +218,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     course.setNo_of_instructors(cursor.getString(13));
                     course.setProject_name(cursor.getString(14));
                     course.setUpdated_on(cursor.getString(15));
-                    if (!cursor.getString(1).trim().startsWith("nd")) {
+                    if (cursor.getString(1).trim().startsWith("nd")) {
                         udacityCourses.add(course);
                     }
                 } while (cursor.moveToNext());

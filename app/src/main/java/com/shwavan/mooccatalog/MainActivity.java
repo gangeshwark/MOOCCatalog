@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.shwavan.mooccatalog.adapter.NavigationAdapter;
 import com.shwavan.mooccatalog.interfaces.NavigationListener;
@@ -224,7 +223,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
 
     @Override
     public void onItemClickNavigation(int position, int layoutContainerId) {
-        Toast.makeText(this, "Pos" + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Pos" + position, Toast.LENGTH_SHORT).show();
         FragmentManager mFragmentManager = getSupportFragmentManager();
         UdacityRegFragment mFragment = new UdacityRegFragment(position);
         mFragmentManager.beginTransaction().replace(layoutContainerId, mFragment).commit();
