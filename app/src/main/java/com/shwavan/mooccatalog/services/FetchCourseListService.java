@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.shwavan.mooccatalog.Constants;
 import com.shwavan.mooccatalog.db.DBHelper;
@@ -143,7 +142,6 @@ public class FetchCourseListService extends IntentService {
             // Getting JSON Array node
             JSONArray courses = jsonObj.getJSONArray(Constants.Udacity.COURSES_FIELD);
             courseTitles = new String[courses.length()];
-            Toast.makeText(getApplication(),"No of courses"+courses.length(),Toast.LENGTH_SHORT).show();
             // looping through All Courses
             for (int i = 0; i < courses.length(); i++) {
                 JSONObject c = courses.getJSONObject(i);
@@ -183,7 +181,7 @@ public class FetchCourseListService extends IntentService {
                 course.setSummary(summary.trim());
                 DBHelper dbHelper = new DBHelper(getApplicationContext());
                 dbHelper.addUdacityCourse(course);
-                Log.e("COURSE",key+" "+title+" "+url+" " + video);
+                //Log.e("COURSE",key+" "+title+" "+url+" " + video);
             }
             JSONArray nanoDegs = jsonObj.getJSONArray(Constants.Udacity.ND_FIELD);
             degTitles = new String[nanoDegs.length()];
@@ -225,7 +223,7 @@ public class FetchCourseListService extends IntentService {
                 course.setSummary(summary.trim());
                 DBHelper dbHelper = new DBHelper(getApplicationContext());
                 dbHelper.addUdacityCourse(course);
-                Log.e("COURSE", key + " " + title + " " + url + " " + video);
+                //Log.e("COURSE", key + " " + title + " " + url + " " + video);
 
             }
 

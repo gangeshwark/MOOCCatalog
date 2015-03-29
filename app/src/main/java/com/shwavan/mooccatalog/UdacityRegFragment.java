@@ -1,7 +1,9 @@
 package com.shwavan.mooccatalog;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -98,6 +100,14 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedpreferences = getActivity().getSharedPreferences("UdacityCatalog", Context.MODE_PRIVATE);
+        Boolean str = sharedpreferences.getBoolean("first", true);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        if (str) {
+            startSer();
+            editor.putBoolean("first", false);
+            editor.apply();
+        }
 
     }
 
