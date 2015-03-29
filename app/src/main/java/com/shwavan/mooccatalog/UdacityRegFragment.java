@@ -40,9 +40,12 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
         // Required empty public constructor
     }
 
-    public UdacityRegFragment(int mode) {
-        // Required empty public constructor
-        this.mode = mode;
+    public static UdacityRegFragment newInstance(int mode) {
+        UdacityRegFragment f = new UdacityRegFragment();
+        Bundle bdl = new Bundle(2);
+        bdl.putInt("MODE", mode);
+        f.setArguments(bdl);
+        return f;
     }
 
     @Override
@@ -100,6 +103,7 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mode = getArguments().getInt("MODE");
         SharedPreferences sharedpreferences = getActivity().getSharedPreferences("UdacityCatalog", Context.MODE_PRIVATE);
         Boolean str = sharedpreferences.getBoolean("first", true);
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -108,7 +112,6 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
             editor.putBoolean("first", false);
             editor.apply();
         }
-
     }
 
     void startSer() {

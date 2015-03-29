@@ -229,7 +229,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
     public void onItemClickNavigation(int position, int layoutContainerId) {
         //Toast.makeText(this, "Pos" + position, Toast.LENGTH_SHORT).show();
         FragmentManager mFragmentManager = getSupportFragmentManager();
-        UdacityRegFragment mFragment = new UdacityRegFragment(position);
+        UdacityRegFragment mFragment = UdacityRegFragment.newInstance(position);
         mFragmentManager.beginTransaction().replace(layoutContainerId, mFragment).commit();
 
     }
