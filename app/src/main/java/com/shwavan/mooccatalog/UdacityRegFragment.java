@@ -174,5 +174,4 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
                 break;
         }
     }
-
 }

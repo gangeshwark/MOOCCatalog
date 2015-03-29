@@ -1,10 +1,13 @@
 package com.shwavan.mooccatalog;
 
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +27,34 @@ import com.shwavan.mooccatalog.provider.UdaCourseContentProvider;
 /**
  * Created by GANGESHWAR on 05-03-2015.
  */
-public class UdacityCourseDetailsFragment extends Fragment {
+public class UdacityCourseDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final int LOADERID = 0;
     View rootView;
     String id;
     TextView courseid, desc, courseSub, coursetit, reqknow, projectname;
     Button link;
     ImageView imageView;
     LinearLayout linearLayout;
+    Uri uri;
+    String[] projection = {
+            DBHelper.KEY_ID,//0
+            DBHelper.KEY_CID,//1
+            DBHelper.KEY_TITLE,//2
+            DBHelper.KEY_SUBTITLE,//3
+            DBHelper.KEY_SHORT_SUM,//4
+            DBHelper.KEY_SUM,//5
+            DBHelper.KEY_IMAGE,//6
+            DBHelper.KEY_VIDEO,//7
+            DBHelper.KEY_HOMEPAGE,//8
+            DBHelper.KEY_NEW,//9
+            DBHelper.KEY_LEVEL,//10
+            DBHelper.KEY_FEATURED,//11
+            DBHelper.KEY_REQ,//12
+            DBHelper.KEY_NOINSTRUCTORS,//13
+            DBHelper.KEY_PROJECT_NAME,//14
+            DBHelper.KEY_UPDATED_ON,//15
+    };
     private ImageLoadingListener animateFirstListener;
 
     public UdacityCourseDetailsFragment() {
@@ -53,33 +76,31 @@ public class UdacityCourseDetailsFragment extends Fragment {
         reqknow = (TextView) rootView.findViewById(R.id.knowledge);
         projectname = (TextView) rootView.findViewById(R.id.projectname);
         imageView = (ImageView) rootView.findViewById(R.id.courseImg);
-        init();
+        uri = Uri.parse(UdaCourseContentProvider.CONTENT_URI + "/" + id);
         return rootView;
     }
 
-    public void init(){
-        String[] projection = {
-                DBHelper.KEY_ID,//0
-                DBHelper.KEY_CID,//1
-                DBHelper.KEY_TITLE,//2
-                DBHelper.KEY_SUBTITLE,//3
-                DBHelper.KEY_SHORT_SUM,//4
-                DBHelper.KEY_SUM,//5
-                DBHelper.KEY_IMAGE,//6
-                DBHelper.KEY_VIDEO,//7
-                DBHelper.KEY_HOMEPAGE,//8
-                DBHelper.KEY_NEW,//9
-                DBHelper.KEY_LEVEL,//10
-                DBHelper.KEY_FEATURED,//11
-                DBHelper.KEY_REQ,//12
-                DBHelper.KEY_NOINSTRUCTORS,//13
-                DBHelper.KEY_PROJECT_NAME,//14
-                DBHelper.KEY_UPDATED_ON,//15
-        };
-        Uri uri = Uri.parse(UdaCourseContentProvider.CONTENT_URI + "/" + id);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(LOADERID, null, this);
+    }
 
-        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
-        if(cursor!=null){
+    @Override
+    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                getActivity(),   // Parent activity context
+                uri,            // Uri to query
+                projection,     // Projection to return
+                null,            // No selection clause
+                null,            // No selection arguments
+                null             // Default sort order
+        );
+    }
+
+    @Override
+    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor cursor) {
+        if (cursor != null) {
             cursor.moveToFirst();
             if (getActivity().getActionBar() != null)
                 getActivity().setTitle(cursor.getString(2));
@@ -97,7 +118,7 @@ public class UdacityCourseDetailsFragment extends Fragment {
                 linearLayout.setVisibility(View.GONE);
             desc.setText(android.text.Html.fromHtml(cursor.getString(5)));
             reqknow.setText(android.text.Html.fromHtml(cursor.getString(12)));
-            //ImageLoader imageLoader = ImageLoader.getInstance();
+
             DisplayImageOptions options;
             options = new DisplayImageOptions.Builder()
                     .showImageOnLoading(R.drawable.ic_stub)
@@ -108,10 +129,7 @@ public class UdacityCourseDetailsFragment extends Fragment {
                     .considerExifParams(true)
                     .displayer(new RoundedBitmapDisplayer(5))
                     .build();
-            //ImageSize targetSize = new ImageSize(120, 120);
             ImageLoader.getInstance().displayImage(cursor.getString(6), imageView, options, animateFirstListener);
-            //Bitmap bitmap = imageLoader.loadImageSync(cursor.getString(6), targetSize, options);
-            //imageView.setImageBitmap(bitmap);
             link.setText("Visit Course");
             final String url = cursor.getString(8);
             link.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +140,12 @@ public class UdacityCourseDetailsFragment extends Fragment {
                     startActivity(i);
                 }
             });
-            cursor.close();
+            //cursor.close();
         }
+    }
+
+    @Override
+    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+
     }
 }
