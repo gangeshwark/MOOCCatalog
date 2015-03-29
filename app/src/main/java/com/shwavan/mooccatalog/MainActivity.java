@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -89,6 +90,16 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
         //this.mUserEmail.setText("gangeshwark@gmail.com");
         //this.mUserPhoto.setImageResource(R.drawable.ic_no_user);
         this.mUserBackground.setImageResource(R.drawable.udalogo);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
     }
 
     /**
