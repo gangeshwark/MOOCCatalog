@@ -121,7 +121,6 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
         mListNameItem1.add(2, "Nanodegree Courses");
         //mListNameItem1.add(3, "Udemy");
 
-
         // icons list items
         List<Integer> mListIconItem = new ArrayList<>();
         mListIconItem.add(0, R.mipmap.ic_launcher); //When the item is a subHeader the value of the icon 0
@@ -175,6 +174,7 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
         mRelativeDrawer = (FrameLayout) this.findViewById(R.id.relativeDrawer);
 
         this.setSupportActionBar(mToolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -239,6 +239,20 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
     @Override
     public void onItemClickNavigation(int position, int layoutContainerId) {
         //Toast.makeText(this, "Pos" + position, Toast.LENGTH_SHORT).show();
+        switch (position) {
+            case 0:
+                mToolbar.setTitle("Udacity Catalog");
+                break;
+            case 1:
+                mToolbar.setTitle("Regular Courses");
+                break;
+            case 2:
+                mToolbar.setTitle("Nanodegree Courses");
+                break;
+            default:
+                mToolbar.setTitle("Udacity Catalog");
+                break;
+        }
         FragmentManager mFragmentManager = getSupportFragmentManager();
         UdacityRegFragment mFragment = UdacityRegFragment.newInstance(position);
         mFragmentManager.beginTransaction().replace(layoutContainerId, mFragment).commit();

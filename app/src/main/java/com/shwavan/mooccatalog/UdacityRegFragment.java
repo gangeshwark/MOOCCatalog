@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -51,33 +52,18 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //new FetchCourseList().execute();
+
         View rootView = inflater.inflate(R.layout.fragment_blank, container, false);
-
-        //listView = (ListView) rootView.findViewById(R.id.listView);
-        DBHelper helper = new DBHelper(getActivity());
-        List<UdacityCourse> list;
-        if (mode == 1) {
-            list = helper.getUdacityRCourseList();
-
-        } else if (mode == 2) {
-            list = helper.getUdacityDCourseList();
-
-        } else {
-            list = helper.getUdacityCourseList();
-
-        }
-        UdacityCourseAdapter adapter = new UdacityCourseAdapter(list);
-
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        recyclerView.setAdapter(adapter);
+        Load load = new Load();
+        load.execute();
+
         return rootView;
     }
 
@@ -172,6 +158,37 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
                 String error = resultData.getString(Intent.EXTRA_TEXT);
                 Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
                 break;
+        }
+    }
+
+    /* Used AsyncTask instead of Loader since its just a list that is being populated.
+       downloading the content from the internet is done in the service.
+    */
+    class Load extends AsyncTask<Void, Void, UdacityCourseAdapter> {
+
+
+        @Override
+        protected UdacityCourseAdapter doInBackground(Void... params) {
+            DBHelper helper = new DBHelper(getActivity());
+            List<UdacityCourse> list;
+            if (mode == 1) {
+                list = helper.getUdacityRCourseList();
+
+            } else if (mode == 2) {
+                list = helper.getUdacityDCourseList();
+
+            } else {
+                list = helper.getUdacityCourseList();
+
+            }
+            adapter = new UdacityCourseAdapter(list);
+
+            return adapter;
+        }
+
+        @Override
+        protected void onPostExecute(UdacityCourseAdapter udacityCourseAdapter) {
+            recyclerView.setAdapter(udacityCourseAdapter);
         }
     }
 }
