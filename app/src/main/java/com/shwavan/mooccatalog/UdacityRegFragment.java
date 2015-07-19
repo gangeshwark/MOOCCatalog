@@ -140,7 +140,7 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
         switch (resultCode) {
             case FetchCourseListService.STATUS_RUNNING:
                 progressDialog = new ProgressDialog(getActivity());
-                progressDialog.setMessage("Loading...");
+                progressDialog.setMessage("Downloading...");
                 progressDialog.show();
                 break;
             case FetchCourseListService.STATUS_FINISHED:
