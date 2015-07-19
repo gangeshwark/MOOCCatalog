@@ -2,13 +2,13 @@ package com.shwavan.mooccatalog;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class UdacityCourseDetailsActivity extends ActionBarActivity {
+public class UdacityCourseDetailsActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
 
@@ -18,8 +18,12 @@ public class UdacityCourseDetailsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_udacity_course_details);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        try {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        } catch (Exception e) {
+            e.getMessage();
+        }
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.detailsContainer, new UdacityCourseDetailsFragment())
@@ -27,6 +31,7 @@ public class UdacityCourseDetailsActivity extends ActionBarActivity {
         }
         this.setElevationToolBar(15);
     }
+
     /**
      * get toolbar
      */

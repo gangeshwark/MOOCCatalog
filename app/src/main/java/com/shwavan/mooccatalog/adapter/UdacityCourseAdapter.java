@@ -34,7 +34,7 @@ public class UdacityCourseAdapter extends RecyclerView.Adapter<UdacityCourseAdap
     @Override
     public UdacityCourseViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).
-        inflate(R.layout.cards_layout, parent, false);
+                inflate(R.layout.cards_layout, parent, false);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,6 +46,7 @@ public class UdacityCourseAdapter extends RecyclerView.Adapter<UdacityCourseAdap
         });
         return new UdacityCourseViewHolder(itemView);
     }
+
 
     @Override
     public void onBindViewHolder(UdacityCourseViewHolder holder, int position) {
@@ -64,7 +65,6 @@ public class UdacityCourseAdapter extends RecyclerView.Adapter<UdacityCourseAdap
                 .displayer(new RoundedBitmapDisplayer(5))
                 .build();
         ImageLoader.getInstance().displayImage(course.getImage_url(), holder.imageView, options, animateFirstListener);
-
 
     }
 

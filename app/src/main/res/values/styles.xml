@@ -6,8 +6,8 @@
         <item name="colorPrimaryDark">@color/primaryColorDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/textIcons</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
+        <!--    <item name="android:windowNoTitle">true</item>
+            <item name="windowActionBar">false</item>-->
         <item name="windowActionModeOverlay">true</item>
         <item name="divider">@color/dividerColor</item>
         <item name="android:textColorPrimary">@color/primaryText</item>
@@ -21,6 +21,12 @@
 
     </style>
 
+    <style name="AppTheme.Tunefit.WithoutActionBar">
+        <!-- Both of these are needed -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
 
 
 

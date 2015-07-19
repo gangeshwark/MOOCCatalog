@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="app_bar_top_padding">24dp</dimen>
+    <dimen name="pic_width">148dp</dimen>
+    <dimen name="pic_height">148dp</dimen>
+    <dimen name="card_height">180dp</dimen>
 </resources>

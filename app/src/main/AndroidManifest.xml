@@ -11,7 +11,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme.Tunefit">
+        android:theme="@style/AppTheme.Tunefit.WithoutActionBar">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -24,7 +24,7 @@
         <service
             android:name=".services.FetchCourseListService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
         <activity
             android:name=".UdacityCourseDetailsActivity"
@@ -39,7 +39,7 @@
             android:name=".provider.UdaCourseContentProvider"
             android:authorities="com.shwavan.provider.mooccatalog"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 
 </manifest>

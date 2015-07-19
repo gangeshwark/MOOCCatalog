@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,10 +28,15 @@ import com.shwavan.mooccatalog.services.FetchCourseListService;
 
 import java.util.List;
 
+/*
+In this fragment, I'm not using Loader because the views' data is downloaded from the internet and is being processed
+in the background service which is a seperate Thread other than the UI thread. And then i use an AsyncTask to move the data to
+the views.
+*/
 
 public class UdacityRegFragment extends Fragment implements DownloadResultReceiver.Receiver {
 
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, recyclerView1, recyclerView2;
     ProgressDialog progressDialog;
     int mode;
     UdacityCourseAdapter adapter;
@@ -49,11 +55,18 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
         return f;
     }
 
+    public boolean isTablet(Context context) {
+        boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+        boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+        return (xlarge || large);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_blank, container, false);
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -63,7 +76,6 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
 
         Load load = new Load();
         load.execute();
-
         return rootView;
     }
 
@@ -149,6 +161,7 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
                     list = helper.getUdacityCourseList();
 
                 }
+
                 adapter = new UdacityCourseAdapter(list);
                 recyclerView.setAdapter(adapter);
                 break;
@@ -164,11 +177,11 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
     /* Used AsyncTask instead of Loader since its just a list that is being populated.
        downloading the content from the internet is done in the service.
     */
-    class Load extends AsyncTask<Void, Void, UdacityCourseAdapter> {
+    class Load extends AsyncTask<Void, Void, List<UdacityCourse>> {
 
 
         @Override
-        protected UdacityCourseAdapter doInBackground(Void... params) {
+        protected List<UdacityCourse> doInBackground(Void... params) {
             DBHelper helper = new DBHelper(getActivity());
             List<UdacityCourse> list;
             if (mode == 1) {
@@ -181,14 +194,16 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
                 list = helper.getUdacityCourseList();
 
             }
-            adapter = new UdacityCourseAdapter(list);
 
-            return adapter;
+            return list;
         }
 
         @Override
-        protected void onPostExecute(UdacityCourseAdapter udacityCourseAdapter) {
-            recyclerView.setAdapter(udacityCourseAdapter);
+        protected void onPostExecute(List<UdacityCourse> list) {
+
+            adapter = new UdacityCourseAdapter(list);
+            recyclerView.setAdapter(adapter);
+
         }
     }
 }

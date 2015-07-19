@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseIntArray;
 import android.view.Menu;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity implements NavigationListener {
+public class MainActivity extends AppCompatActivity implements NavigationListener {
 
     public static final String CURRENT_POSITION = "CURRENT_POSITION";
     public TextView mUserName;
@@ -174,9 +174,12 @@ public class MainActivity extends ActionBarActivity implements NavigationListene
         mRelativeDrawer = (FrameLayout) this.findViewById(R.id.relativeDrawer);
 
         this.setSupportActionBar(mToolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        try {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        } catch (Exception e) {
+            e.getMessage();
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             try {

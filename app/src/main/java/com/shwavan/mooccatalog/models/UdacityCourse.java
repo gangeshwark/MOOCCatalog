@@ -171,6 +171,11 @@ public class UdacityCourse {
         this.no_of_instructors = no_of_instructors;
     }
 
+    @Override
+    public String toString() {
+        return key + " " + title;
+    }
+
     public String getProject_name() {
         return project_name;
     }

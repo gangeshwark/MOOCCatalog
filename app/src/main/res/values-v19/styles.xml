@@ -3,4 +3,11 @@
     <style name="AppTheme.Tunefit" parent="AppTheme.Theme">
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+
+    <style name="AppTheme.Tunefit.WithoutActionBar">
+        <!-- Both of these are needed -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
 </resources>
