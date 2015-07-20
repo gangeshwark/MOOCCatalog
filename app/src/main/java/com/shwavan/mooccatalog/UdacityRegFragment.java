@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ import java.util.List;
 
 /*
 In this fragment, I'm not using Loader because the views' data is downloaded from the internet and is being processed
-in the background service which is a seperate Thread other than the UI thread. And then i use an AsyncTask to move the data to
+in the background service which is a separate Thread other than the UI thread. And then i use an AsyncTask to move the data to
 the views.
 */
 
@@ -74,6 +75,22 @@ public class UdacityRegFragment extends Fragment implements DownloadResultReceiv
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        //shows Gridview on Tablets and Listview on Phones
+        if (isTablet(getActivity())) {
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+            layoutManager = new GridLayoutManager(getActivity(), 2);
+            layoutManager.setOrientation(GridLayoutManager.VERTICAL);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+        } else {
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+            layoutManager = new LinearLayoutManager(getActivity());
+            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+        }
         Load load = new Load();
         load.execute();
         return rootView;
